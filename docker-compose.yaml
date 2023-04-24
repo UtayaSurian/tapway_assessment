@@ -1,0 +1,41 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    network_mode: host
+    ports:
+      - "8080:15672"
+      - "5672:5672"
+    hostname: my-rabbit
+    container_name: rabbitmq-server
+
+  producer_api:
+    image: utayasurian17/producer_api:v3
+    network_mode: host
+    ports:
+      - "8000:8000"
+    container_name: producer-api
+    environment:
+      host: "localhost"
+      port: "5672"
+      queue: "tapway"
+#    volumes:
+#      - producer_api:/api
+  consumer_backend:
+    image: utayasurian17/consumer_backend:v3
+    network_mode: host
+    environment:
+      host: "localhost"
+      port: "5672"
+      queue: "tapway"
+      storage: "local"
+    ports:
+      - "8001:8001"
+    container_name: consumer-backend
+#    volumes:
+#      - consumer_api:/consumer
+
+
+#volumes:
+#  producer_api:
+#  consumer_api:
